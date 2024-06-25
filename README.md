@@ -22,11 +22,11 @@ var monitor = require('waveorb-monitor')
 // Get ram and swap usage stats as JSON, based on 'free -m'
 var mem = await monitor.mem()
 
-// Get CPU usage as JSON, based on 'top'
-var cpu = await monitor.cpu()
-
 // Get hard drive usage as JSON, based on 'df -h'
 var hd = await monitor.hd()
+
+// Get CPU usage as JSON, based on 'top'
+var cpu = await monitor.cpu()
 
 // Get all stats (mem, cpu, hd) as JSON
 var stats = await monitor.stats()
