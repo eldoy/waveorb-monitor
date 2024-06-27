@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/eldoy/waveorb-monitor/issues"
   },
-  "homepage": "https://github.com/eldoy/waveorb-monitor#readme"
+  "homepage": "https://github.com/eldoy/waveorb-monitor#readme",
+  "dependencies": {
+    "extras": "^0.13.0"
+  }
 }
