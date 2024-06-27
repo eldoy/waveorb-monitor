@@ -49,8 +49,8 @@ function cpu() {
 
   var regexp = new RegExp('\\x1B|\\r|\\[((H|J|\\d?m))', 'g')
   var cpu = stdout.replace(regexp, '').split('\n').filter(Boolean)
-  var idx = cpu.findIndex((v) => v.includes('PID')) + 1
 
+  var idx = cpu.findIndex((v) => v.includes('PID'))
   var info = cpu.slice(0, idx)
   var processes = cpu.slice(idx, cpu.length)
 
