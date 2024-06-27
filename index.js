@@ -6,7 +6,20 @@ function mem() {
 
   if (stderr) return stderr
 
-  return stdout
+  var mem = stdout.split('\n').filter(Boolean)
+  var keys = mem[0].split(' ').filter(Boolean)
+  var entries = mem.slice(1, mem.length)
+
+  return Object.fromEntries(
+    entries.map((entry) => {
+      var [k, v] = entry.split(':')
+      var values = v.split(' ').filter(Boolean)
+      return [
+        k.trim().toLowerCase(),
+        Object.fromEntries(values.map((v, idx) => [keys[idx], v]))
+      ]
+    })
+  )
 }
 
 function hd() {
@@ -14,7 +27,7 @@ function hd() {
 
   if (stderr) return stderr
 
-  var hd = stdout.split('\n')
+  var hd = stdout.split('\n').filter(Boolean)
 
   return util.parseArray(hd, [
     'filesystem',
@@ -30,19 +43,19 @@ function hd() {
 }
 
 function cpu() {
-  var { stdout, stderr } = extras.run('top', { silent: true })
+  var { stdout, stderr } = extras.run('top -s 0 -i 1', { silent: true })
 
   if (stderr) return stderr
 
-  var cpu = stdout.split('\n').filter(Boolean)
+  var regexp = new RegExp('\\x1B|\\r|\\[((H|J|\\d?m))', 'g')
+  var cpu = stdout.replace(regexp, '').split('\n').filter(Boolean)
+  var idx = cpu.findIndex((v) => v.includes('PID')) + 1
 
-  var info = cpu.slice(0, 10)
-  var processes = cpu.slice(10, cpu.length)
+  var info = cpu.slice(0, idx)
+  var processes = cpu.slice(idx, cpu.length)
 
   info = util.parseObject(info)
   processes = util.parseArray(processes)
-
-  console.log({ process: processes[0] })
 
   return { ...info, list: processes }
 }
