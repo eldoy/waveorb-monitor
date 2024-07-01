@@ -85,7 +85,7 @@ module.exports = {
   mem,
   hd,
   cpu,
-  stats: async function () {
+  stats: function () {
     return { mem: mem(), hd: hd(), cpu: cpu() }
   }
 }
