@@ -4,7 +4,7 @@
   "description": "Waveorb monitor",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon -q --exec spekk"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "homepage": "https://github.com/eldoy/waveorb-monitor#readme",
   "dependencies": {
     "extras": "^0.13.0"
+  },
+  "devDependencies": {
+    "spekk": "^0.2.2"
   }
 }
