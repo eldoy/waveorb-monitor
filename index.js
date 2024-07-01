@@ -42,19 +42,40 @@ function hd() {
   ])
 }
 
+function parseTop(str) {
+  var [, rest] = str.split('-')
+  var [up, users, load] = rest.split(',  ')
+  var [timestamp, up] = up.split('up')
+  var [users] = users.split(' ')
+  var [k, v] = load.split(':')
+
+  return Object.fromEntries(
+    Object.entries({
+      timestamp,
+      up,
+      users,
+      [k]: v.split(',').map((value) => value.trim())
+    }).map(([k, v]) => [
+      k.trim().split(' ').join('').toLowerCase(),
+      typeof v == 'string' ? v.trim() : v
+    ])
+  )
+}
+
 function cpu() {
-  var { stdout, stderr } = extras.run('top -s 0 -i 1', { silent: true })
+  var { stdout, stderr } = extras.run('top -n 1 -b', { silent: true })
 
   if (stderr) return stderr
 
-  var regexp = new RegExp('\\x1B|\\r|\\[((H|J|\\d?m))', 'g')
-  var cpu = stdout.replace(regexp, '').split('\n').filter(Boolean)
-
+  var cpu = stdout.split('\n').filter(Boolean)
   var idx = cpu.findIndex((v) => v.includes('PID'))
   var info = cpu.slice(0, idx)
   var processes = cpu.slice(idx, cpu.length)
 
-  info = util.parseObject(info)
+  var info = {
+    top: parseTop(info[0]),
+    ...util.parseObject(info.slice(1, info.length))
+  }
   processes = util.parseArray(processes)
 
   return { ...info, list: processes }
