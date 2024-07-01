@@ -42,26 +42,6 @@ function hd() {
   ])
 }
 
-function parseTop(str) {
-  var [, rest] = str.split('-')
-  var [up, users, load] = rest.split(',  ')
-  var [timestamp, up] = up.split('up')
-  var [users] = users.split(' ')
-  var [k, v] = load.split(':')
-
-  return Object.fromEntries(
-    Object.entries({
-      timestamp,
-      up,
-      users,
-      [k]: v.split(',').map((value) => value.trim())
-    }).map(([k, v]) => [
-      k.trim().split(' ').join('').toLowerCase(),
-      typeof v == 'string' ? v.trim() : v
-    ])
-  )
-}
-
 function cpu() {
   var { stdout, stderr } = extras.run('top -n 1 -b', { silent: true })
 
@@ -73,7 +53,7 @@ function cpu() {
   var processes = cpu.slice(idx, cpu.length)
 
   var info = {
-    top: parseTop(info[0]),
+    top: util.parseTop(info[0]),
     ...util.parseObject(info.slice(1, info.length))
   }
   processes = util.parseArray(processes)
